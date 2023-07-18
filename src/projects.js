@@ -45,7 +45,7 @@ function App() {
     async function addEmp() {
 
         //e.preventDefault();
-        const item = await axios.post("http://localhost:3005/projects", {
+        const item = await axios.post("https://team-manager-api.onrender.com/projects", {
             name: name,
             client: role
         });
@@ -56,7 +56,7 @@ function App() {
         setRole('');
     }
     const some = async () => {
-        const item = await axios.get("http://localhost:3005/projects");
+        const item = await axios.get("https://team-manager-api.onrender.com/projects");
         setList(item.data);
         console.log(list);
         return;
@@ -68,7 +68,7 @@ function App() {
 
     async function deleteItem(id) {
         try {
-            const url = "http://localhost:3005/projects/" + id;
+            const url = "https://team-manager-api.onrender.com/projects/" + id;
             const del = await axios.delete(url);
             console.log(del);
             const k = list.filter((l) => l.Id !== id);
@@ -89,13 +89,13 @@ function App() {
 
     async function update(id) {
         try {
-            const url = "http://localhost:3005/projects/" + id;
+            const url = "https://team-manager-api.onrender.com/projects/" + id;
             const del = await axios.patch(url, { client: ur });
 
             setUr('');
             setUpd('');
 
-            const item = await axios.get("http://localhost:3005/projects");
+            const item = await axios.get("https://team-manager-api.onrender.com/projects");
             setList(item.data);
 
         } catch (err) {
