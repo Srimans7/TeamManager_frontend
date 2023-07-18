@@ -85,7 +85,7 @@ function App() {
     async function addEmp() {
 
         //e.preventDefault();
-        const item = await axios.post("http://localhost:3005/team", {
+        const item = await axios.post("https://team-manager-api.onrender.com/team", {
             name: name,
             member: personName,
             project: role
@@ -98,9 +98,9 @@ function App() {
     }
 
     const some = async () => {
-        const item = await axios.get("http://localhost:3005/team");
-        const lt = await axios.get("http://localhost:3005/employee");
-        const ltt = await axios.get("http://localhost:3005/projects");
+        const item = await axios.get("https://team-manager-api.onrender.com5/team");
+        const lt = await axios.get("https://team-manager-api.onrender.com/employee");
+        const ltt = await axios.get("https://team-manager-api.onrender.com/projects");
 
 
         console.log(lt.data);
@@ -113,7 +113,7 @@ function App() {
 
     async function deleteItem(id) {
         try {
-            const url = "http://localhost:3005/team/" + id;
+            const url = "https://team-manager-api.onrender.com/team/" + id;
             const del = await axios.delete(url);
             console.log(del);
             const k = list.filter((l) => l.Id !== id);
@@ -134,13 +134,13 @@ function App() {
 
     async function update(id) {
         try {
-            const url = "http://localhost:3005/team/" + id;
+            const url = "https://team-manager-api.onrender.com/team/" + id;
             const del = await axios.patch(url, { member: ur });
 
             setUr('');
             setUpd('');
 
-            const item = await axios.get("http://localhost:3005/team");
+            const item = await axios.get("https://team-manager-api.onrender.com/team");
             setList(item.data);
 
         } catch (err) {
@@ -409,7 +409,7 @@ function App() {
                                                             <button onClick={() => { update(upd) } }>Save</button>
                                                         </div>
                                                         :
-                                                    row.member.join()}</StyledTableCell>
+                                                    row.member.join(', ')}</StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <Button variant="outlined" onClick={() => { deleteItem(row.Id) }} size="small">
                                                         Delete
