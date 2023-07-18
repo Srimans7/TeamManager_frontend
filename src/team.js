@@ -98,7 +98,7 @@ function App() {
     }
 
     const some = async () => {
-        const item = await axios.get("https://team-manager-api.onrender.com5/team");
+        const item = await axios.get("https://team-manager-api.onrender.com/team");
         const lt = await axios.get("https://team-manager-api.onrender.com/employee");
         const ltt = await axios.get("https://team-manager-api.onrender.com/projects");
 
