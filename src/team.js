@@ -125,8 +125,7 @@ var nm = 0;
 
  
 const filteredList = list.filter((row) =>
-    row.name.toLowerCase().includes(search.toLowerCase()) ||
-    row.client.toLowerCase().includes(search.toLowerCase())
+    row.name.toLowerCase().includes(search.toLowerCase())
   );
 
 
