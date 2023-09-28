@@ -119,8 +119,7 @@ function App() {
 
  
 const filteredList = list.filter((row) =>
-    row.name.toLowerCase().includes(search.toLowerCase()) ||
-    row.client.toLowerCase().includes(search.toLowerCase())
+    row.name.toLowerCase().includes(search.toLowerCase()) 
   );
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
