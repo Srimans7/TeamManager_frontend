@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import * as React from 'react';
 import axios from 'axios';
-import Grid from '@material-ui/core/grid';
+
 import Box from '@material-ui/core/Box';
 import { Container, Button, TextField, Title, Typography } from '@material-ui/core';
 import { styled } from '@mui/material/styles';
@@ -361,8 +361,6 @@ const filteredList = list.filter((row) =>
          
             
 
-                    <Grid container spacing={10}>
-                        <Grid item xs>
 
                            
       
@@ -513,10 +511,7 @@ const filteredList = list.filter((row) =>
       </TableContainer>
       
     
-                        </Grid>
-
                         
-                    </Grid>
 
                 </div>
            
