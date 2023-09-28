@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import * as React from 'react';
 import axios from 'axios';
-import Grid from '@material-ui/core/Grid';
+
 import Box from '@material-ui/core/Box';
 import { Container, Button, TextField, Title, Typography } from '@material-ui/core';
 import { styled } from '@mui/material/styles';
@@ -12,6 +12,29 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { makeStyles } from '@mui/styles';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
+import FolderIcon from '@mui/icons-material/Folder';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
+
+
+import {
+ 
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+ 
+} from '@mui/material';
+
+import {
+  TablePagination,
+} from '@mui/material';
 
 
 function App() {
@@ -22,6 +45,83 @@ function App() {
     const [upd, setUpd] = useState();
     const [ur, setUr] = useState();
     const [mail, setMail] = useState();
+   const [un, setUn] = useState();
+
+
+
+
+
+
+    const [search, setSearch] = useState('');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [open, setOpen] = useState(false);
+
+
+  const [opend, setOpend] = useState(false);
+
+  const useStyles = makeStyles((theme) => ({
+  tableRow: {
+     height: '20px',
+    marginBottom: '6px', // Gap between rows
+    boxShadow: '-3px 4px 10px rgba(0, 0, 0, 0.2)', // Shadow for each row
+    borderRadius: '4px', // Rounded corners for each row
+    transition: 'transform 0.3s ease', // Smooth hover effect
+    '&:hover': {
+      transform: 'scale(1.02)', // Scale up on hover
+    },
+  },
+   largeFontSize: {
+    fontSize: '16px', // Adjust the font size as needed
+  }
+}));
+
+  const classes = useStyles();
+
+  var nm = 0;
+
+  const handleOpend = () => {
+    setOpend(true);
+  };
+
+  const handleClosed = () => {
+    setOpend(false);
+  };
+
+  const handleSubmitd = () => {
+    update(upd);    handleClosed();
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = () => {
+    // Add your form submission logic here
+    // Typically, you would send the data to a server or perform some action
+    // and then close the dialog.
+    handleClose();
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+ 
+const filteredList = list.filter((row) =>
+    row.name.toLowerCase().includes(search.toLowerCase()) ||
+    row.client.toLowerCase().includes(search.toLowerCase())
+  );
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
@@ -93,9 +193,11 @@ function App() {
     async function update(id) {
         try {
             const url = "https://team-manager-api.onrender.com/employee/" + id;
-            const del = await axios.patch(url, {role : ur});
+            const del = await axios.patch(url, {role : ur, name: un, email: mail});
           
             setUr('');
+            setUn('');
+            setMail('');
             setUpd('');
 
             const item = await axios.get("https://team-manager-api.onrender.com/employee");
@@ -108,58 +210,48 @@ function App() {
     }
 
     return (
-        <Container justify
-        >
-            <React.Fragment>
-                <h1>Employees</h1>
-            </React.Fragment>
-           
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    backgroundColor: '#f5f6f7', p: 3, 
-                    '&:hover': {
-                        backgroundColor: '#edf2fa',
-                        opacity: [0.9, 0.8, 0.7],
-                        p: 2, border: '3px'
-                    },
-                }}
-            >       
-        <div>
-            <form onSubmit={(e) => addEmp(e)}>
-                <br />
-                        <Grid container spacing={10}>
-                            <Grid item xs>
-                                
-                        <Box sx={{
-                                    backgroundColor: '#88fc9e', p: 1, border: '1px solid green',
-                            borderRadius: '10px',
-                            '&:hover': {
-                                backgroundColor: '#a7fcb6',
-                                opacity: [0.9, 0.8, 0.7],
-                                p: 2, border: '3px'
-                            },
-} }>
-                                        
+              
+         <div style={{backgroundColor: "white", margin: "10px", borderRadius: "10px", width:"76%"}}>
+                    
+<br />
+            <br />
+                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+        <TextField
+          label="Search"
+          variant="outlined"
+          fullWidth
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{margin: '16px', maxWidth: '200px' }}
+          
+    
+        />
+        <Button variant="contained" color="primary" >
+  <SearchIcon /> Search
+</Button>
+
+            <Button variant="outlined" color="primary" onClick={handleOpen} style={{ marginLeft: '40%' ,  }}>
+        + <AccountCircleIcon />
+ Add Employees
+
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Employee
+          </DialogContentText>
+
                                         <TextField
                            
                             label="Name:"
                             required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            /> </Box>
-                                </Grid>
-                                <Grid item xs>
-                                    
-                        <Box sx={{
-                                    backgroundColor: '#88fc9e', p: 1, border: '1px solid green', borderRadius: '10px',
-                            '&:hover': {
-                                backgroundColor: '#a7fcb6',
-                                opacity: [0.9, 0.8, 0.7],
-                                p: 2, border: '3px'
-                            },
-                        }}>
+                            /> 
+                                
+                                    <span>                 </span>
+                      
                         <TextField
 
                                         label="Role:"
@@ -167,173 +259,161 @@ function App() {
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
                             />
-                                        </Box>
-                            </Grid>
+                                        
 
-                            <Grid item xs>
-
-                                <Box sx={{
-                                    width: '320px',
-                                    backgroundColor: '#88fc9e', p: 1, border: '1px solid green', borderRadius: '10px',
-                                    '&:hover': {
-                                        backgroundColor: '#a7fcb6',
-                                        opacity: [0.9, 0.8, 0.7],
-                                        p: 2, border: '3px'
-                                    },
-                                }}>
+                           
+                                
                                     <TextField
 
                                         label="Email:"
                                         required
                                        value={mail}
                                         onChange={(event) => {setMail(event.target.value) } }
+                                        fullWidth
+                                        style = {{width: '300px'}}
                                     />
-                                </Box>
-                            </Grid>
+                                
+                            </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={() => addEmp()} color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+      </div>
 
+                 <br />
+         
+            
 
-
-                        </Grid>
-
-                <br />
-                 <br />   
-                        <Button variant="contained" color="success" onClick={() => addEmp()} >Register</Button>
-                        
-                    </form>
                     
-                    </div>
-                   </Box> 
-            <br />
-            <br />
-            <br />
-            <br />
 
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    backgroundColor: '#d1f3fd', p: 3, border: '1px',
-                    '&:hover': {
-                        backgroundColor: '#97f9d8',
-                        opacity: [0.9, 0.8, 0.7],
-                        p: 2, border: '3px'
-                    },
-                }}
-            >  
-
-            <div>
-
-                    {/*
-               
-                <table >
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Role</th>
-                    </tr>
-                    {  
-                        list.map((item) => {
-                            return (
-                                <>
-                                    <tr>
-                                        <td>{item.Id}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.role}</td>
-                                        <td><button onClick={() => { deleteItem(item.Id) } }>X</button></td>
-                                        <td>
-                                            {upd === item.Id ? 
-                                                <input type='text' onChange={(e) => setUr(e.target.value)} value={ur} onKeyDown={handleKeyDown} />
-              
-                                                 
-                                                :
-                                                <button onClick={() => setUpd(item.Id) }>Edit</button>
-                                            }
-                                        </td>
-                                    </tr>
-                                </>
-                            );
-                    })
-
-                    }
-                    
-                    </table> */}
-                    <Grid container spacing={10}>
-                        <Grid item xs>
-
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell>Name</StyledTableCell>
-                                            <StyledTableCell align="right">ID</StyledTableCell>
-                                            <StyledTableCell align="right">Email</StyledTableCell>
-                                    <StyledTableCell align="right">Role</StyledTableCell>
-                                    <StyledTableCell align="right"></StyledTableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {list.map((row) => (
-                                    <StyledTableRow key={row.name}>
-                                        <StyledTableCell component="th" scope="row">
-                                            {row.name}
-                                        </StyledTableCell>
-                                        <StyledTableCell align="right">{row.Id}</StyledTableCell>
-                                        <StyledTableCell align="right">{row.email}</StyledTableCell>
-                                        <StyledTableCell align="right">
-                                            {upd === row.Id ?
-                                                 <TextField
                            
-                                                    label="Role:"
-                                                    onChange={(e) => setUr(e.target.value)} value={ur} onKeyDown={handleKeyDown}  defaultValue={row.role }
-                        />
-                                                :
-                                            row.role}</StyledTableCell>
-                                        <StyledTableCell align="right">
-                                            <Button variant="outlined" onClick={() => { deleteItem(row.Id) }} size="small">
-                                                Delete
-                                            </Button>
-                                            <Button variant="contained" onClick={() => setUpd(row.Id)} size="small">
-                                                Update
-                                            </Button>
-                                            
-                                        </StyledTableCell>
+      
 
-                                    </StyledTableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                        </Grid>
+
+
+
+
+      <TableContainer style={{   margin: '10px' , overflowX: 'hidden'}}>
+        <Table>
+          <TableHead>
+            <TableRow>
+             
+              <TableCell style={{ color: 'blue' }} >S.No</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell  style={{ color: 'blue' }}>Id</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell style={{ color: 'blue' }} >Role</TableCell>
+              <TableCell></TableCell>
+              
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              filteredList.map((row) => (
+                <TableRow
+                  key={row.id}
+                  className={classes.tableRow}
+                  
+                >
+
+
+                  <TableCell style={{ color: 'blue' }}>{++nm}</TableCell>
+                  <TableCell >{row.name}</TableCell>
+                  <TableCell style={{ color: 'blue' }}>{row.Id}</TableCell>
+                  <TableCell>{row.email}</TableCell>
+                  <TableCell style={{ color: 'blue' }}>{row.role}</TableCell>
+                  <TableCell>
+
+{upd === row.Id ?
+<div>
+    
+      <Dialog open={opend} onClose={handleClosed}>
+        <DialogTitle>Update</DialogTitle>
+        <DialogContent>
+          
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Name"
+            type="text"
+            onChange={(e) => setUn(e.target.value)} value={un}
+            fullWidth
+          />
+
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Email"
+            type="text"
+            onChange={(e) => setMail(e.target.value)} value={mail}
+            fullWidth
+          />
+
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Role"
+            type="text"
+            onChange={(e) => setUr(e.target.value)} value={ur} onKeyDown={handleKeyDown}
+            fullWidth
+          />
+          {/* Add more form fields here */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() =>{handleClosed(); setUpd();} } color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={() =>{handleSubmitd(); setUpd();} } color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>  
+                :
+<Button
+      variant="outlined"
+      color="primary"
+      startIcon={<EditIcon />}
+      onClick={() => {setUpd(row.Id); setMail(row.email); setUr(row.role); setUn(row.name); handleOpend();} }
+    >
+      Edit
+    </Button>
+                                            }
+
+                 
+                 
+
+                                                    <Button  color="secondary" onClick={() => { deleteItem(row.Id) }} size="small">
+                                                        <IconButton
+          color="secondary"
+          aria-label="delete"
+        >
+          <DeleteIcon />
+        </IconButton>
+                                                    </Button>
+                                                    
+
+                                               </TableCell>
+
+                </TableRow>
+              )) }
+          </TableBody>
+        </Table>
+      </TableContainer>
+      
+    
                         
-                        <Grid item xs>
 
-                            <Box sx={{
-                                backgroundColor: '#fcffc4', p: 2,
-                                '&:hover': {
-                                    backgroundColor: '#fbffb5',
-                                    opacity: [0.9, 0.8, 0.7],
-                                    p: 3, border: '3px'
-                                },
-                            }}>
-                    <React.Fragment>
-                                <Typography>Total employees :</Typography>
-                        <Typography component="p" variant="h4">
-                                        {list.length}
-                        </Typography>
-                                    <Typography color="text.secondary" sx={{ flex: 1 }}>
-                                        
-                        </Typography>
-                        
-                                </React.Fragment>
-                                </Box>
-                            </Grid>
-                        </Grid>
+                </div>
+           
+       
 
-            </div> 
-           </Box>
-        </Container>
-        
-  );
+    );
 }
 
 export default App;
